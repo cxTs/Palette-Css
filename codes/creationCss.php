@@ -9,7 +9,7 @@
     $rgbaS = (count($rgba)>0)?"\n/*\n".implode("\n",$rgba)."\n*/\n":"";
     $hslS = (count($hsl)>0)?"\n/*\n".implode("\n",$hsl)."\n*/\n":"";
     $cssText = $head.$hexS.$rgbaS.$hslS.$foot;
-    $cssFile = fopen('couleurs.css','r+');
+    $cssFile = fopen('couleurs.css','w+');
     fputs($cssFile,$cssText);
     fclose($cssFile);
 ?>

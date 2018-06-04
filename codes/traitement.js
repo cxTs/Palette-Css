@@ -57,7 +57,7 @@ function clearOutput(id)
     var el = document.getElementById(id);
     while(el.firstChild)
     {
-        el.removeChild(ul.firstChild);
+        el.removeChild(el.firstChild);
     }
 };
 function hide(id)
@@ -108,6 +108,7 @@ function sendToPhp(hex,rgba,hsl,callback)
 }
 function cssFileAdress()
 {
+    clearOutput("cssFile");
     var section = document.getElementById('cssFile');
     var a = document.createElement('a');
     var text = document.createTextNode("fichier couleurs.css");
