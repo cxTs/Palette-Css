@@ -197,6 +197,11 @@ Palette.prototype = {
         if(regex[format].test(this.source))
         {
             let tab = this.source.match(regex[format]);
+            if(format=="hex") {
+                for(i in tab) {
+                    tab[i] = tab[i].toUpperCase();
+                }
+            }
             this[`${colObj}Json`] = JSON.stringify(tab);
             for(i in tab)
             {
