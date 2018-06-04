@@ -47,20 +47,23 @@ function recevoirFichier()
     {
         window.alert("Type de fichier non pris en charge");
         document.getElementById("file").value="";
-        clearOutput();
-        document.getElementById('submit').setAttribute('type','hidden');
+        clearOutput("palette");
+        hide("submit");
     }
     return;
 };
-function clearOutput()
+function clearOutput(id)
 {
-    var ul = document.getElementById('palette');
-    while(ul.firstChild)
+    var el = document.getElementById(id);
+    while(el.firstChild)
     {
-        ul.removeChild(ul.firstChild);
+        el.removeChild(ul.firstChild);
     }
-    document.getElementById('submit').setAttribute('type','hidden');
 };
+function hide(id)
+{
+    document.getElementById(id).setAttribute('type','hidden');
+}
 function getXHR()
 {
     var xhr = null;
