@@ -142,7 +142,7 @@ END OF RESET
 
 /*-----------------------------------------*/
 html { font-size : 100%; }
-html>body { font-size : 16px; }
+html>body { font-size : 1em; }
 body { font-size : 100%; line-height : 1.5; }
 /*-----------------------------------------*/
 html { padding : 0; }
@@ -170,12 +170,29 @@ class
 .button {
 	background-color: #23679A;
 	border: none;
+	border-bottom : 1px solid #FFF;
 	color : #E9E9E9;
 	display: block;
 	font-size: 1.2em;
 	padding : .8em;
 	text-align: center;
 	width : 100%;
+}
+form>.button {
+	/* border-bottom : 1px solid #FFF; */
+}
+.godet {
+	display: block;
+	font-size: 1.3em;
+	padding: 1em 1em;
+	text-align: left;
+}
+.nomCouleur {
+	background-color: #FFFFFF33;
+	display: inline-block;
+	padding: .5em;
+	text-align: center;
+	width: 50%;
 }
 /*
 ===================
