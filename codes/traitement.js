@@ -11,7 +11,7 @@ var regex =
     hexValues:/[a-f0-9]{2}/gi,
     rgbaValues:/[2][5][0-5]|[2][0-4][0-9]|[0-1][0-9][0-9]|[0-9][0-9]|0\.[0-9]{1,2}|[0-9]/g,
     hslValues:/[2][5][0-5](?!%)|[2][0-4][0-9](?!%)|[0-1][0-9][0-9](?!%)|100(?=%)|[0-9][0-9](?=%)|0(?=%)|0(?!%)/gi,
-    fileType:/\w*svg|\w*xml|\w*text|\w*css|\w*html/i,
+    fileType:/\w*\/svg|\w*\/xml|\w*\/plain|\w*\/css|\w*\/html/i,
 };
 var texte = "";
 var readerText = new FileReader();
@@ -38,14 +38,18 @@ function recevoirFichier()
     var fichier = document.getElementById("file").files[0];
     if (regex.fileType.test(fichier.type))
     {
+        clearOutput("cssFile");
         lireFichier(fichier);
     }
     else
     {
+        console.log(fichier.type);
         window.alert("Type de fichier non pris en charge");
         document.getElementById("file").value="";
         clearOutput("palette");
+        clearOutput("cssFile");
         hide("submit");
+        hide("affichage");
     }
     return;
 };
@@ -103,13 +107,14 @@ function sendToPhp(hex,rgba,hsl,callback)
     xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     xhr.send("hex="+hex+"&rgba="+rgba+"&hsl="+hsl);
 }
-function cssFileAdress()
+function cssFileAdress(action)
 {
     clearOutput("cssFile");
     var section = document.getElementById('cssFile');
     var a = document.createElement('a');
     var text = document.createTextNode("DONWLOAD CSS");
     a.setAttribute("href","couleurs.css");
+    a.setAttribute("id","download");
     a.setAttribute("download","couleurs.css");
     a.setAttribute("class","button");
     a.appendChild(text);
@@ -121,6 +126,10 @@ function creerCSS()
     var rgba = palette.colRgbaJson;
     var hsl = palette.colHslJson;
     sendToPhp(hex,rgba,hsl,cssFileAdress);
+};
+function toggleView()
+{
+    console.log("toggleView");
 };
 ///////////////
 // OBJETCS  ///
@@ -146,7 +155,7 @@ Palette.prototype = {
         li.setAttribute("class","godet");
         li.setAttribute("style","background-color:"+color+";");
         var p = this.el('p');
-        p.setAttribute("class","hexa");
+        p.setAttribute("class","nomCouleur");
         var txt2 = this.txt(color);
         p.appendChild(txt2);
         li.appendChild(p);
@@ -220,6 +229,7 @@ Palette.prototype = {
 			this.paletteUl.removeChild(this.paletteUl.firstChild);
 		}
         document.getElementById('submit').setAttribute('type','hidden');
+        document.getElementById('affichage').setAttribute('type','hidden');
 	},
     formatLong : function(color)
     {
@@ -256,10 +266,12 @@ Palette.prototype = {
         if(chex!=0 || crgba!=0 || chsl!=0)
         {
             document.getElementById('submit').setAttribute('type','button');
+            document.getElementById('affichage').setAttribute('type','button');
         }
         else
         {
             document.getElementById('submit').setAttribute('type','hidden');
+            document.getElementById('affichage').setAttribute('type','hidden');
         }
     }
 }
@@ -270,11 +282,13 @@ if (document.addEventListener)
 {
     document.getElementById("file").addEventListener("change",recevoirFichier,false);
     document.getElementById("submit").addEventListener("click",creerCSS,false);
+    document.getElementById("affichage").addEventListener("click",toggleView,false);
 }
 else
 {
     document.getElementById("file").attachEvent("onchange",recevoirFichier);
     document.getElementById("submit").attachEvent("onclick",creerCSS);
+    document.getElementById("affichage").attachEvent("onclick",toggleView);
 }
 window.onload = function()
 {
@@ -283,3 +297,5 @@ window.onload = function()
         recevoirFichier();
     }
 };
+var t = "text/js";
+console.log(regex.fileType.test(t));
