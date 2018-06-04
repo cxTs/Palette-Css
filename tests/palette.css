@@ -1,0 +1,144 @@
+
+/*
+#666666	
+#00ffcc
+#4400aa
+#0000aa
+#0066ff
+#006680
+#00ccff
+#2ca089
+#aad400
+#7137c8
+#660080
+#000000
+#cc00ff
+#d400aa
+#ff0066
+#ff80b2
+#93ac9d
+#6c5353
+#aa0000
+#ffcc00
+#ccff00
+#44aa00AA
+#00ff66
+#EFFACE
+rgba(100,150,200,0.75)
+*/
+
+* {
+	-webkit-box-sizing : border-box;
+	   -moz-box-sizing : border-box;
+	    -ms-box-sizing : border-box;
+	     -o-box-sizing : border-box;
+			box-sizing : border-box;
+	margin : 0;
+	padding : 0;
+}
+/*********************************************************************************/
+/*********************************************************************************/
+html { font-size : 100%; }
+html>body { font-size : 16px; }
+body { font-size : 100%; line-height : 1.5;}
+/*********************************************************************************/
+html { padding : 0; }
+body { margin : 0; padding : 1em; }
+/*********************************************************************************/
+/*********************************************************************************/
+body { background-color: #BBB; }
+[id="main"] {
+	margin : 0 auto;
+	width : 70em;;
+}
+[id="selection"],
+[id="result"] {
+	display : inline-block;
+	vertical-align : top;
+}
+[id="form"] {
+	max-width : 20em;
+}
+[id="pic-frame"] {
+	background-color : rgb(0, 102, 255);
+	width : 20em;
+	padding : 1em;	
+	vertical-align : top;	
+}
+[id="pic"] {
+	background-color : #FFF;
+	max-width : 100%;
+	vertical-align : baseline;
+}
+[id="palette"] {
+	max-width : 50em;
+}
+[id="css"] {
+	background-color : #DDD;
+	display : block;
+	columns : 2 20em;
+	-moz-columns : 2 20em;
+	-webkit-columns : 2 20em;
+}
+/*********************************************************************************/
+/*********************************************************************************/
+/*********************************************************************************/
+
+/*********************************************************************************/
+/*********************************************************************************/
+/*********************************************************************************/
+.button {
+	background-color : #0066ff;
+	color : #FFF;
+	display : block;
+	font-size : 1.5em;	
+	padding : .5em .25em .5em .5em;
+}
+/*
+.choice { 
+	cursor : pointer;	
+	max-width : 20em;
+}
+.choice:hover,
+.choice:focus {
+	border-right : .50em #44aa00 solid ;
+}
+.button:not(:last-child) { margin-bottom : .5em; }
+.check { display : none; }
+input.check:checked+.button { background-color : #44aa00; }
+.submit {
+	border : solid .15em #00ccff;
+	cursor : pointer;
+}
+.submit:hover,
+.submit:focus {
+	background-color : #00ccff;
+	border : solid .15em #7137c8;
+}
+
+*********************************************************************************/
+.godet {
+	display : inline-block;
+	list-style-type : none;
+	padding-top : 3.66em;
+	width : 10em;
+}
+.godet>p {
+	background-color : #333;
+	opacity : .5;
+	color : #FFF;
+	padding : .25em;
+}
+.rgb {
+	font-size : .8em;
+}
+.hexa {
+    font-size: .8em;
+}
+/*********************************************************************************/
+@media screen and (max-width:361px){
+	body { padding : 0; }
+	[id="main"] { width : auto; }	
+	[id="form"] { width : auto; }
+	[id="palette"] { width : auto; }
+}

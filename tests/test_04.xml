@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article>
+	<auteur>
+		<nom>COUCHAUX</nom>
+		<prenom>Thomas</prenom>
+	</auteur>
+	<date>09/08/2013</date>
+	<sujet>Test extraction code couleur d'un fichier XML</sujet>
+	<keyword>XML test</keyword>
+    <colors>
+        <c1>#700</c1>
+        <c2>#09E</c2>
+		<c3>#3FF4C3</c3>
+		<c4>#BAC</c4>
+		<c5>#ACE</c5>
+		<c6>#0D0D01</c6>
+		<c7>rgb(100,210,78)</c7>
+		<c8>rgba(200,210,78,0.5)</c8>
+    </colors>
+</article>
