@@ -108,9 +108,10 @@ function cssFileAdress()
     clearOutput("cssFile");
     var section = document.getElementById('cssFile');
     var a = document.createElement('a');
-    var text = document.createTextNode("fichier couleurs.css");
+    var text = document.createTextNode("DONWLOAD CSS");
     a.setAttribute("href","couleurs.css");
     a.setAttribute("download","couleurs.css");
+    a.setAttribute("class","button");
     a.appendChild(text);
     section.appendChild(a);
 };
