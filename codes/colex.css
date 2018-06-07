@@ -188,7 +188,8 @@ form>.button {
 	text-align: left;
 }
 .nomCouleur {
-	background-color: #FFFFFF33;
+	background-color: #DDDDDD33;
+    border: .01em solid #666;
 	display: inline-block;
 	padding: .5em;
 	text-align: center;
