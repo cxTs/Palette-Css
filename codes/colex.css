@@ -178,22 +178,22 @@ class
 	text-align: center;
 	width : 100%;
 }
-form>.button {
-	/* border-bottom : 1px solid #FFF; */
+[id="view"]:checked~ul>li {
+    text-align: center;
+    width: 25%;
+}
+[id="view"]:checked~ul>li>p {
+    visibility: hidden;
 }
 .godet {
-	display: block;
+	display: inline-block;
 	font-size: 1.3em;
 	padding: 1em 1em;
 	text-align: left;
+    width: 100%;
 }
 .nomCouleur {
-	background-color: #DDDDDD33;
-    border: .01em solid #666;
-	display: inline-block;
-	padding: .5em;
-	text-align: center;
-	width: 50%;
+
 }
 /*
 ===================
@@ -201,5 +201,17 @@ form>.button {
 */
 /* 320 PX */
 @media screen and (min-width: 20em) {
-
+    .nomCouleur{
+        background-color: #DDDDDD33;
+        border: .01em solid #666;
+    	display: inline-block;
+    	padding: .5em;
+    	text-align: center;
+        visibility: visible;
+    }
+}
+@media screen and (min-width: 33.75em) {
+    .nomCouleur{
+        width: 50%;
+    }
 }

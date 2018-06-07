@@ -229,7 +229,7 @@ Palette.prototype = {
 			this.paletteUl.removeChild(this.paletteUl.firstChild);
 		}
         document.getElementById('submit').setAttribute('type','hidden');
-        document.getElementById('affichage').setAttribute('type','hidden');
+        document.getElementById('affichage').setAttribute('class','hidden');
 	},
     formatLong : function(color)
     {
@@ -266,12 +266,12 @@ Palette.prototype = {
         if(chex!=0 || crgba!=0 || chsl!=0)
         {
             document.getElementById('submit').setAttribute('type','button');
-            document.getElementById('affichage').setAttribute('type','button');
+            document.getElementById('affichage').setAttribute('class','button');
         }
         else
         {
             document.getElementById('submit').setAttribute('type','hidden');
-            document.getElementById('affichage').setAttribute('type','hidden');
+            document.getElementById('affichage').setAttribute('class','hidden');
         }
     }
 }

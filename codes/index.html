@@ -10,17 +10,19 @@
     <body>
         <header id="menu">
             <nav>
-                <form id="choice">
+                <form id="choice" enctype="text/plain">
                     <label for="file" class="button">PICK A FILE</label>
                     <input type="file" id="file" class="hidden" name="file"/>
-                    <input type="hidden" id="cssJson" class="button" name="cssJson"/>
+                    <!-- <input type="hidden" id="cssJson" class="button" name="cssJson"/> -->
                     <input type="hidden" id="submit" class="button" value="GENERATE CSS FILE"/>
-                    <input type="hidden" id="affichage" class="button" value="TOGGLE COLOR VIEW"/>
+
                 </form>
                 <section id="cssFile"></section>
             </nav>
         </header>
         <section id="couleurs">
+            <label for="view" id="affichage" class="hidden">TOGGLE COLOR VIEW</label>
+            <input type="checkbox" id="view" class="" name="view" value=""/>
             <ul id="palette"></ul>
         </section>
         <footer>
