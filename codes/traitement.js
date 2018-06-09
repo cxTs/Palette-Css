@@ -1,5 +1,5 @@
-var regex =
-{
+// ensemble des expressions régulières nécessaire au travaille avec les couleurs
+var regex = {
     hex:/#[a-f0-9]{8}|#[a-f0-9]{6}|#[a-f0-9]{3}/gi,
     rgba:/rgba?\(\s*(\s*(\s*\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*,?){3}(\s*,\s*[0]{1}\.\d*\s*)?\)/gi,
     hsl:/hsl\(\s*\d*\s*[,]\s*\d*%\s*[,]\s*\d*%\s*\)/gi,
@@ -13,102 +13,87 @@ var regex =
     hslValues:/[2][5][0-5](?!%)|[2][0-4][0-9](?!%)|[0-1][0-9][0-9](?!%)|100(?=%)|[0-9][0-9](?=%)|0(?=%)|0(?!%)/gi,
     fileType:/\w*\/svg|\w*\/xml|\w*\/plain|\w*\/css|\w*\/html/i,
 };
-var texte = "";
-var readerText = new FileReader();
-readerText.onload = function (event)
-{
+var texte = ""; // fichier sélectionné par l'uitlisation renvoyé au format text.
+var readerText = new FileReader(); // lecteur du fichier sélectionné par l'utilisateur
+readerText.onload = function (event) {
     texte = "";
-    texte += event.target.result;
-    palette = new Palette(texte);
+    texte += event.target.result; // une fois le lecteur chargé, il attribut son résusltat à 'texte'
+    palette = new Palette(texte); // création d'un nouvelle objet palette par-dessus la première instance avec 'texte'
 }
-////////////////
-// FUNCTIONS  //
-////////////////
-function lireFichier(file)
-{
-    if(texte.length>0)
+//--------------/
+// FUNCTIONS
+//--------------/
+function lireFichier(file) {
+    if(texte.length>0) // nettoyage de 'texte' si plusieurs fichiers traités à la suite
     {
         texte = "";
     }
-    readerText.readAsText(file);
+    readerText.readAsText(file); // envoie du fichier au reader sur la fonction readAsText()
     return;
 };
-function recevoirFichier()
-{
-    var fichier = document.getElementById("file").files[0];
-    if (regex.fileType.test(fichier.type))
-    {
-        clearOutput("cssFile");
+function recevoirFichier() {
+    var fichier = document.getElementById("file").files[0]; // sélection du fichier reçu de l'input file
+    // vérification du format du fichier passé par l'utilisateur
+    if (regex.fileType.test(fichier.type)) {
+        clearOutput("cssFile"); // nettoyage couleurs précedemment affichées
         lireFichier(fichier);
-    }
-    else
-    {
-        console.log(fichier.type);
+    } else {
         window.alert("Type de fichier non pris en charge");
+        // nettoyage affichage du précédent fichier
         document.getElementById("file").value="";
-        clearOutput("palette");
-        clearOutput("cssFile");
-        hide("submit");
-        hide("affichage");
+        clearOutput("palette"); // palette de couleurs
+        clearOutput("cssFile"); // lien de téléchargement du css
+        // masquage bouton en rapport avec les traitement d'un fichier de format valide
+        hide("submit",'type');
+        hide("affichage",'class');
     }
     return;
 };
-function clearOutput(id)
-{
+function clearOutput(id) { // destruction des descendant d'un élément dont l'id est passé en arg
     var el = document.getElementById(id);
-    while(el.firstChild)
-    {
+    while(el.firstChild) {
         el.removeChild(el.firstChild);
     }
+    return;
 };
-function hide(id)
-{
-    document.getElementById(id).setAttribute('type','hidden');
+function hide(id,attr) { // mutation attribut des input dont l'id est passé en arg
+    document.getElementById(id).setAttribute(attr,'hidden');
+    return;
 }
-function getXHR()
-{
+// fonction de création d'une instance XMLHttpRequest
+function getXHR() {
     var xhr = null;
-    if(window.XMLHttpRequest || window.ActiveXObject)
-    {
-        if(window.ActiveXObject)
-        {
-            try
-            {
+    if(window.XMLHttpRequest || window.ActiveXObject) {
+        if(window.ActiveXObject) {
+            try {
                 xhr = new ActiveXObject("Msxml2.XMLHTTP");
-            }
-            catch (e)
-            {
+            } catch (e) {
                 xhr = new ActiveXObject("Microsoft.XMLHTTP");
             }
-        }
-        else
-        {
+        } else {
             xhr = new XMLHttpRequest();
         }
-    }
-    else
-    {
+    } else {
         window.alert("Votre navigateur ne prend pas en charge l'objet XMLHttpRequest");
         return null;
     }
     return xhr;
 };
-function sendToPhp(hex,rgba,hsl,callback)
-{
+function sendToPhp(hex,rgba,hsl,callback) {
     var xhr = getXHR();
-    xhr.onreadystatechange = function()
-    {
-        if(xhr.readyState==4 && xhr.status==200)
-        {
-            callback();
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState==4 && xhr.status==200) {
+            // lorsque la requête est passée et le retour serveur ok, on fait apparaître le lien de téléchargement du
+            // fichier css créé par le srcipt php
+            callback(); // cssFileAdress()
         }
     };
     xhr.open("POST","creationCss.php",true);
     xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     xhr.send("hex="+hex+"&rgba="+rgba+"&hsl="+hsl);
+    return;
 }
-function cssFileAdress(action)
-{
+function cssFileAdress(action) {
     clearOutput("cssFile");
     var section = document.getElementById('cssFile');
     var a = document.createElement('a');
@@ -119,63 +104,72 @@ function cssFileAdress(action)
     a.setAttribute("class","button");
     a.appendChild(text);
     section.appendChild(a);
+    return;
 };
-function creerCSS()
-{
+function creerCSS() {
     var hex = palette.colHexJson;
     var rgba = palette.colRgbaJson;
     var hsl = palette.colHslJson;
     sendToPhp(hex,rgba,hsl,cssFileAdress);
+    return;
 };
-function toggleView()
-{
-    console.log("toggleView");
-};
-///////////////
-// OBJETCS  ///
-///////////////
-function Palette(texte)
-{
-    this.clearOutput();
-    var date = new Date();
-    this.name = "palette"+date.getMilliseconds();
+function mettreEnSurbrillance(event) { // mise en surbrillance du code couleur au click sur <li>
+    var couleur = event.target.firstChild.firstChild; // text node de <p> dans <li> dans <ul>
+    if(document.body.createTextRange) { //IE
+        var range = document.body.createTextRange();
+        range.moveToElementText(couleur);
+        range.select();
+    } else { // Mozilla , Chrome , Opera
+        var selection = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(couleur);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+    return;
+}
+//--------------/
+// OBJETCS
+//--------------/
+function Palette(texte) { // constructeur / arg : texte renvoyé par le FileReader
+    this.clearOutput(); // nettoyage éventuel affichage précédent
     this.colHex = {};
     this.colRgba = {};
     this.colHsl = {};
     this.source = "";
     this.traiterFichier(texte);
+    return;
 };
 Palette.prototype = {
     paletteUl : document.getElementById("palette"),
     txt : function(t){ return document.createTextNode(t); },
 	el : function(elem){ return document.createElement(elem); },
-    godet : function(color)
+    godet : function(color) // création de éléments <li> et de leur attributs
     {
         var li = this.el("li");
         li.setAttribute("class","godet");
         li.setAttribute("style","background-color:"+color+";");
+        li.setAttribute("onclick","mettreEnSurbrillance(event)")
         var p = this.el('p');
         p.setAttribute("class","nomCouleur");
-        var txt2 = this.txt(color);
-        p.appendChild(txt2);
+        var codeCouleur = this.txt(color);
+        p.appendChild(codeCouleur);
         li.appendChild(p);
         return li;
     },
-    /////////////////////////////////
-    afficherCouleurs : function(tabCouleur)
-    {
-        for(var i in tabCouleur)
+    //--------------/
+    afficherCouleurs : function(tabCouleur) {
+        for(var i in tabCouleur) //remplissage <ul id="palette"> avec les éléments <li> créés par godet()
         {
             this.paletteUl.appendChild(this.godet(i));
         };
     },
-    traiterFichier : function(texte)
-    {
-        if(this.source.length>0)
-        {
+    traiterFichier : function(texte) {
+        if(this.source.length>0) { //nettoyage éventuelle présence d'un texte issu d'un précédent fichier
             this.source = "";
         }
         this.source += texte;
+        //création des objets couleur par type d'encodage des couleurs
         this.creerCol("hex");
         this.creerCol("rgba");
         this.creerCol("hsl");
@@ -184,36 +178,29 @@ Palette.prototype = {
         this.afficherCouleurs(this.colHsl);
         this.afficherGenCss();
     },
-    nettoyage : function(color,format)
-    {
+    nettoyage : function(color,format) { // nettoyage du format texte des couleur pours css uniforme
         let col;
-        if(format=="hex")
-        {
+        if(format=="hex") { //seuelement un trim pour le format hexa
             col=color.trim();
-        }
-        else
-        {
+        } else { // trim et remplacement des tabulations éventuelles entre les paranthèses des rgb.a et hsl
             col=color.trim();
             col=color.replace(regex.space,'');
         }
         return col;
     },
-    creerCol : function(format)
-    {
+    creerCol : function(format) { // création des objets couleur
         let colObj = format;
-        colObj = colObj.replace(colObj.charAt(0),colObj.charAt(0).toUpperCase());
-        colObj = "col"+colObj;
-        if(regex[format].test(this.source))
-        {
+        colObj = colObj.replace(colObj.charAt(0),colObj.charAt(0).toUpperCase()); // ex. 'hex' -> 'Hex'
+        colObj = "col"+colObj; //création du nom de variable correspondant à ceux donnés par le prototype -> 'colHex'
+        if(regex[format].test(this.source)) { // vérification de présence de couleur au format donné dans le texte source
             let tab = this.source.match(regex[format]);
             if(format=="hex") {
-                for(i in tab) {
+                for(i in tab) { // mise en majuscule des caractères du format hexa pour uniformisation du fichier css
                     tab[i] = tab[i].toUpperCase();
                 }
             }
-            this[`${colObj}Json`] = JSON.stringify(tab);
-            for(i in tab)
-            {
+            this[`${colObj}Json`] = JSON.stringify(tab); // créa nom de propriété avec réf à la valeur de la var colObj
+            for(i in tab) {
                 let col = this.nettoyage(tab[i],format);
                 col = this.formatLong(col);
                 this[colObj][col] = this.colStringToArray(col,format);
@@ -221,81 +208,60 @@ Palette.prototype = {
         }
         return;
     },
-    /////////////////////////////////
-    clearOutput : function()
-    {
-		while(this.paletteUl.firstChild)
-        {
+    //--------------/
+    clearOutput : function() { // nettoyage des affichages suite au traitement d'un fichier
+		while(this.paletteUl.firstChild) {
 			this.paletteUl.removeChild(this.paletteUl.firstChild);
 		}
         document.getElementById('submit').setAttribute('type','hidden');
         document.getElementById('affichage').setAttribute('class','hidden');
 	},
-    formatLong : function(color)
-    {
-        if(color.length>4)
-        {
+    formatLong : function(color) { // mise au format long des couleurs hexa abrégées
+        if(color.length>4) {
             return color;
         }
         let fLong = "";
         color = color.slice(1);
-        for(let i=0;i<color.length;i++)//double les valeurs pour obtenir un format long
-        {
+        //double les valeurs pour obtenir un format long
+        for(let i=0;i<color.length;i++) {
             fLong+=color[i]+color[i];
         }
         return "#"+fLong;
     },
-    colStringToArray : function(color,format)
-    {
-        let tab = [];
-        if(color.length>=6)
-        {
-            return color.match(regex[format+"Values"]);
-        }
-        for(let i=0;i<color.length;i++)//double les valeurs pour obtenir un format long
-        {
-            tab[i]=color[i]+color[i];
-        }
-        return tab;
+    colStringToArray : function(color,format) {
+        return color.match(regex[format+"Values"]);
     },
-    afficherGenCss : function()
-    {
+    afficherGenCss : function() { // afiichage du bouton permettant de générer le fichier css issu des couleurs affichées
         var chex = Object.values(this.colHex).length;
         var crgba = Object.values(this.colRgba).length;
         var chsl = Object.values(this.colRgba).length;
-        if(chex!=0 || crgba!=0 || chsl!=0)
-        {
+        // vérification qu'au moins un des objets couleur contient des couleurs pour éviter de générer un fichier css vierge
+        if(chex!=0 || crgba!=0 || chsl!=0) {
+            // bouton d'envoie au script php pour écrire les couleur dans un fichier css
             document.getElementById('submit').setAttribute('type','button');
+            // bouton de permutation de l'affichage
             document.getElementById('affichage').setAttribute('class','button');
-        }
-        else
-        {
+        } else {
             document.getElementById('submit').setAttribute('type','hidden');
             document.getElementById('affichage').setAttribute('class','hidden');
         }
     }
 }
-////////////////////////////
-////////////////////////////
-var palette = new Palette();
-if (document.addEventListener)
-{
+//--------------/
+//--------------/
+var palette = new Palette(""); // instance de pallette vide
+// mise en place des listener au chargement de la page
+if (document.addEventListener) {
     document.getElementById("file").addEventListener("change",recevoirFichier,false);
     document.getElementById("submit").addEventListener("click",creerCSS,false);
-    document.getElementById("affichage").addEventListener("click",toggleView,false);
-}
-else
-{
+} else {
     document.getElementById("file").attachEvent("onchange",recevoirFichier);
     document.getElementById("submit").attachEvent("onclick",creerCSS);
-    document.getElementById("affichage").attachEvent("onclick",toggleView);
 }
-window.onload = function()
-{
-    if (document.getElementById("file").value!="")
-    {
+// déclenchement du traitement du fichier au chargement si la page à été rafraichie avec un fichier déja sélectionné
+window.onload = function() {
+    if (document.getElementById("file").value!="") {
         recevoirFichier();
     }
+    return;
 };
-var t = "text/js";
-console.log(regex.fileType.test(t));
