@@ -129,7 +129,7 @@ function mettreEnSurbrillance(event) { // mise en surbrillance du code couleur a
     return;
 }
 //--------------/
-// OBJETCS
+// OBJECTS
 //--------------/
 function Palette(texte) { // constructeur / arg : texte renvoyé par le FileReader
     this.clearOutput(); // nettoyage éventuel affichage précédent
