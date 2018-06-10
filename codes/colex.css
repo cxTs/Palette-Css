@@ -212,7 +212,6 @@ class
 /* 540 PX */
 @media screen and (min-width: 33.75em) {
     .button {
-
         border: .1em solid #FFF;
         display: inline-block;
         width: 50%
