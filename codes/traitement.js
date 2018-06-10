@@ -94,8 +94,8 @@ function sendToPhp(hex,rgba,hsl,callback) {
     return;
 }
 function cssFileAdress() {
-    var form = document.getElementById('choice');
-    form.removeChild(form.lastChild);
+    clearOutput('cssFile');
+    var section = document.getElementById('cssFile');
     var a = document.createElement('a');
     var text = document.createTextNode("DONWLOAD CSS");
     a.setAttribute("href","couleurs.css");
@@ -103,7 +103,7 @@ function cssFileAdress() {
     a.setAttribute("download","couleurs.css");
     a.setAttribute("class","button");
     a.appendChild(text);
-    form.appendChild(a);
+    section.appendChild(a);
     return;
 };
 function creerCSS() {
