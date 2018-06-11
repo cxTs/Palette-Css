@@ -1,4 +1,4 @@
-// ensemble des expressions régulières nécessaire au travaille avec les couleurs
+// ensemble des expressions régulières nécessaires au travail avec les couleurs
 var regex = {
     hex:/#[a-f0-9]{8}|#[a-f0-9]{6}|#[a-f0-9]{3}/gi,
     rgba:/rgba?\(\s*(\s*(\s*\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*,?){3}(\s*,\s*[0]{1}\.\d*\s*)?\)/gi,
@@ -19,6 +19,7 @@ readerText.onload = function (event) {
     texte = "";
     texte += event.target.result; // une fois le lecteur chargé, il attribut son résusltat à 'texte'
     palette = new Palette(texte); // création d'un nouvelle objet palette par-dessus la première instance avec 'texte'
+    creerCSS();
 }
 //--------------/
 // FUNCTIONS
@@ -35,17 +36,22 @@ function recevoirFichier() {
     var fichier = document.getElementById("file").files[0]; // sélection du fichier reçu de l'input file
     // vérification du format du fichier passé par l'utilisateur
     if (regex.fileType.test(fichier.type)) {
-        clearOutput("cssFile"); // nettoyage couleurs précedemment affichées
+        //clearOutput("cssFile"); // nettoyage couleurs précedemment affichées
         lireFichier(fichier);
     } else {
         window.alert("Type de fichier non pris en charge");
         // nettoyage affichage du précédent fichier
         document.getElementById("file").value="";
         clearOutput("palette"); // palette de couleurs
-        clearOutput("cssFile"); // lien de téléchargement du css
-        // masquage bouton en rapport avec les traitement d'un fichier de format valide
-        hide("submit",'type');
-        hide("affichage",'class');
+        try { //nettoyage bouton download css
+            var form = document.getElementById('choice');
+            var dlCss = document.getElementById("download");
+            console.log(dlCss);
+            console.log("try");
+            form.removeChild(dlCss);
+        } catch(e) {
+            console.log("catch"+e);
+        };
     }
     return;
 };
@@ -94,16 +100,23 @@ function sendToPhp(hex,rgba,hsl,callback) {
     return;
 }
 function cssFileAdress() {
-    clearOutput('cssFile');
-    var section = document.getElementById('cssFile');
+    var form = document.getElementById("choice");
+    try {
+        var dlCss = document.getElementById("download");
+        console.log(dlCss);
+        console.log("try");
+        form.removeChild(dlCss);
+    } catch(e) {
+        console.log("catch"+e);
+    };
     var a = document.createElement('a');
-    var text = document.createTextNode("DONWLOAD CSS");
+    var text = document.createTextNode("DOWNLOAD CSS");
     a.setAttribute("href","couleurs.css");
     a.setAttribute("id","download");
     a.setAttribute("download","couleurs.css");
     a.setAttribute("class","button");
     a.appendChild(text);
-    section.appendChild(a);
+    form.appendChild(a);
     return;
 };
 function creerCSS() {
@@ -176,7 +189,6 @@ Palette.prototype = {
         this.afficherCouleurs(this.colHex);
         this.afficherCouleurs(this.colRgba);
         this.afficherCouleurs(this.colHsl);
-        this.afficherGenCss();
     },
     nettoyage : function(color,format) { // nettoyage du format texte des couleur pours css uniforme
         let col;
@@ -213,8 +225,6 @@ Palette.prototype = {
 		while(this.paletteUl.firstChild) {
 			this.paletteUl.removeChild(this.paletteUl.firstChild);
 		}
-        document.getElementById('submit').setAttribute('type','hidden');
-        document.getElementById('affichage').setAttribute('class','hidden');
 	},
     formatLong : function(color) { // mise au format long des couleurs hexa abrégées
         if(color.length>4) {
@@ -230,21 +240,6 @@ Palette.prototype = {
     },
     colStringToArray : function(color,format) {
         return color.match(regex[format+"Values"]);
-    },
-    afficherGenCss : function() { // afiichage du bouton permettant de générer le fichier css issu des couleurs affichées
-        var chex = Object.values(this.colHex).length;
-        var crgba = Object.values(this.colRgba).length;
-        var chsl = Object.values(this.colRgba).length;
-        // vérification qu'au moins un des objets couleur contient des couleurs pour éviter de générer un fichier css vierge
-        if(chex!=0 || crgba!=0 || chsl!=0) {
-            // bouton d'envoie au script php pour écrire les couleur dans un fichier css
-            document.getElementById('submit').setAttribute('type','button');
-            // bouton de permutation de l'affichage
-            document.getElementById('affichage').setAttribute('class','button');
-        } else {
-            document.getElementById('submit').setAttribute('type','hidden');
-            document.getElementById('affichage').setAttribute('class','hidden');
-        }
     }
 }
 //--------------/
@@ -253,10 +248,8 @@ var palette = new Palette(""); // instance de pallette vide
 // mise en place des listener au chargement de la page
 if (document.addEventListener) {
     document.getElementById("file").addEventListener("change",recevoirFichier,false);
-    document.getElementById("submit").addEventListener("click",creerCSS,false);
 } else {
     document.getElementById("file").attachEvent("onchange",recevoirFichier);
-    document.getElementById("submit").attachEvent("onclick",creerCSS);
 }
 // déclenchement du traitement du fichier au chargement si la page à été rafraichie avec un fichier déja sélectionné
 window.onload = function() {
