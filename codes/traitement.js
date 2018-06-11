@@ -1,4 +1,4 @@
-// ensemble des expressions régulières nécessaires au travail avec les couleurs
+// ensemble des expressions régulières nécessaire au travaille avec les couleurs
 var regex = {
     hex:/#[a-f0-9]{8}|#[a-f0-9]{6}|#[a-f0-9]{3}/gi,
     rgba:/rgba?\(\s*(\s*(\s*\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*,?){3}(\s*,\s*[0]{1}\.\d*\s*)?\)/gi,
@@ -19,7 +19,6 @@ readerText.onload = function (event) {
     texte = "";
     texte += event.target.result; // une fois le lecteur chargé, il attribut son résusltat à 'texte'
     palette = new Palette(texte); // création d'un nouvelle objet palette par-dessus la première instance avec 'texte'
-    //creerCSS();
 }
 //--------------/
 // FUNCTIONS
@@ -43,11 +42,10 @@ function recevoirFichier() {
         // nettoyage affichage du précédent fichier
         document.getElementById("file").value="";
         clearOutput("palette"); // palette de couleurs
-        try { //nettoyage bouton download css
-            var form = document.getElementById('choice');
-            var dlCss = document.getElementById("download");
-            form.removeChild(dlCss);
-        } catch(e) {};
+        //clearOutput("cssFile"); // lien de téléchargement du css
+        // masquage bouton en rapport avec les traitement d'un fichier de format valide
+        //hide("submit",'type');
+        //hide("affichage",'class');
     }
     return;
 };
@@ -96,13 +94,13 @@ function sendToPhp(hex,rgba,hsl,callback) {
     return;
 }
 function cssFileAdress() {
-    var form = document.getElementById("choice");
+    var form = document.getElementById('choice');
     try {
-        var dlCss = document.getElementById("download");
+        var dlCss = document.getElementById('download');
         form.removeChild(dlCss);
-    } catch(e) {};
+    } catch (e) {};
     var a = document.createElement('a');
-    var text = document.createTextNode("DOWNLOAD CSS");
+    var text = document.createTextNode("DONWLOAD CSS");
     a.setAttribute("href","couleurs.css");
     a.setAttribute("id","download");
     a.setAttribute("download","couleurs.css");
@@ -157,10 +155,6 @@ Palette.prototype = {
         return li;
     },
     //--------------/
-    creerCSS : function() {
-        sendToPhp(this.colHexJson,this.colRgbaJson,this.colHslJson,cssFileAdress);
-        return;
-    },
     afficherCouleurs : function(tabCouleur) {
         for(var i in tabCouleur) //remplissage <ul id="palette"> avec les éléments <li> créés par godet()
         {
@@ -180,6 +174,7 @@ Palette.prototype = {
         this.afficherCouleurs(this.colRgba);
         this.afficherCouleurs(this.colHsl);
         this.creerCSS();
+        //this.afficherGenCss();
     },
     nettoyage : function(color,format) { // nettoyage du format texte des couleur pours css uniforme
         let col;
@@ -190,6 +185,10 @@ Palette.prototype = {
             col=color.replace(regex.space,'');
         }
         return col;
+    },
+    creerCSS : function() {
+        sendToPhp(this.colHexJson,this.colRgbaJson,this.colHslJson,cssFileAdress);
+        return;
     },
     creerCol : function(format) { // création des objets couleur
         let colObj = format;
@@ -231,7 +230,22 @@ Palette.prototype = {
     },
     colStringToArray : function(color,format) {
         return color.match(regex[format+"Values"]);
-    }
+    },
+    // afficherGenCss : function() { // afiichage du bouton permettant de générer le fichier css issu des couleurs affichées
+    //     var chex = Object.values(this.colHex).length;
+    //     var crgba = Object.values(this.colRgba).length;
+    //     var chsl = Object.values(this.colRgba).length;
+    //     // vérification qu'au moins un des objets couleur contient des couleurs pour éviter de générer un fichier css vierge
+    //     if(chex!=0 || crgba!=0 || chsl!=0) {
+    //         // bouton d'envoie au script php pour écrire les couleur dans un fichier css
+    //         //document.getElementById('submit').setAttribute('type','button');
+    //         // bouton de permutation de l'affichage
+    //         //document.getElementById('affichage').setAttribute('class','button');
+    //     } else {
+    //         document.getElementById('submit').setAttribute('type','hidden');
+    //         document.getElementById('affichage').setAttribute('class','hidden');
+    //     }
+    // }
 }
 //--------------/
 //--------------/
@@ -239,8 +253,10 @@ var palette = new Palette(""); // instance de pallette vide
 // mise en place des listener au chargement de la page
 if (document.addEventListener) {
     document.getElementById("file").addEventListener("change",recevoirFichier,false);
+    //document.getElementById("submit").addEventListener("click",creerCSS,false);
 } else {
     document.getElementById("file").attachEvent("onchange",recevoirFichier);
+    //document.getElementById("submit").attachEvent("onclick",creerCSS);
 }
 // déclenchement du traitement du fichier au chargement si la page à été rafraichie avec un fichier déja sélectionné
 window.onload = function() {
