@@ -19,7 +19,7 @@ readerText.onload = function (event) {
     texte = "";
     texte += event.target.result; // une fois le lecteur chargé, il attribut son résusltat à 'texte'
     palette = new Palette(texte); // création d'un nouvelle objet palette par-dessus la première instance avec 'texte'
-    creerCSS();
+    //creerCSS();
 }
 //--------------/
 // FUNCTIONS
@@ -46,12 +46,8 @@ function recevoirFichier() {
         try { //nettoyage bouton download css
             var form = document.getElementById('choice');
             var dlCss = document.getElementById("download");
-            console.log(dlCss);
-            console.log("try");
             form.removeChild(dlCss);
-        } catch(e) {
-            console.log("catch"+e);
-        };
+        } catch(e) {};
     }
     return;
 };
@@ -103,12 +99,8 @@ function cssFileAdress() {
     var form = document.getElementById("choice");
     try {
         var dlCss = document.getElementById("download");
-        console.log(dlCss);
-        console.log("try");
         form.removeChild(dlCss);
-    } catch(e) {
-        console.log("catch"+e);
-    };
+    } catch(e) {};
     var a = document.createElement('a');
     var text = document.createTextNode("DOWNLOAD CSS");
     a.setAttribute("href","couleurs.css");
@@ -119,13 +111,7 @@ function cssFileAdress() {
     form.appendChild(a);
     return;
 };
-function creerCSS() {
-    var hex = palette.colHexJson;
-    var rgba = palette.colRgbaJson;
-    var hsl = palette.colHslJson;
-    sendToPhp(hex,rgba,hsl,cssFileAdress);
-    return;
-};
+
 function mettreEnSurbrillance(event) { // mise en surbrillance du code couleur au click sur <li>
     var couleur = event.target.firstChild.firstChild; // text node de <p> dans <li> dans <ul>
     if(document.body.createTextRange) { //IE
@@ -171,6 +157,10 @@ Palette.prototype = {
         return li;
     },
     //--------------/
+    creerCSS : function() {
+        sendToPhp(this.colHexJson,this.colRgbaJson,this.colHslJson,cssFileAdress);
+        return;
+    },
     afficherCouleurs : function(tabCouleur) {
         for(var i in tabCouleur) //remplissage <ul id="palette"> avec les éléments <li> créés par godet()
         {
@@ -189,6 +179,7 @@ Palette.prototype = {
         this.afficherCouleurs(this.colHex);
         this.afficherCouleurs(this.colRgba);
         this.afficherCouleurs(this.colHsl);
+        this.creerCSS();
     },
     nettoyage : function(color,format) { // nettoyage du format texte des couleur pours css uniforme
         let col;
