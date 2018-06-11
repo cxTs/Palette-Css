@@ -129,7 +129,9 @@ function Palette(texte) { // constructeur / arg : texte renvoyé par le FileRead
     this.colRgba = {};
     this.colHsl = {};
     this.source = "";
-    this.traiterFichier(texte);
+    if(texte!="") {
+        this.traiterFichier(texte);
+    }
     return;
 };
 Palette.prototype = {
